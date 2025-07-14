@@ -4,6 +4,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TrendingUp, Target, Calendar, Award } from 'lucide-react-native';
 import { getUserStats, getExamResults } from '@/utils/storage';
 
+interface ExamResult {
+  id: string;
+  score: number;
+  date: string;
+  category?: string;
+  questionsAnswered: number;
+  timeSpent: number;
+}
+
+interface WeeklyProgressData {
+  day: string;
+  score: number;
+}
+
+interface CategoryProgressData {
+  name: React.JSX.Element;
+  progress: number;
+  color: string;
+}
+
 const { width } = Dimensions.get('window');
 
 export default function ProgressScreen() {
@@ -12,11 +32,11 @@ export default function ProgressScreen() {
     totalCorrect: 0,
     currentStreak: 0,
     bestScore: 0,
-    totalQuestions: 0
+    totalQuestions: 0,
   });
-  const [examResults, setExamResults] = useState([]);
-  const [weeklyProgress, setWeeklyProgress] = useState([]);
-  const [categoryProgress, setCategoryProgress] = useState([]);
+  const [examResults, setExamResults] = useState<ExamResult[]>([]);
+  const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgressData[]>([]);
+  const [categoryProgress, setCategoryProgress] = useState<CategoryProgressData[]>([]);
 
   useEffect(() => {
     loadProgressData();
@@ -30,67 +50,89 @@ export default function ProgressScreen() {
   const loadProgressData = async () => {
     const userStats = await getUserStats();
     const results = await getExamResults();
-    
+
     setStats(userStats);
     setExamResults(results);
-    
+
     // Generate weekly progress from recent results
     const weekData = generateWeeklyProgress(results);
     setWeeklyProgress(weekData);
-    
+
     // Generate category progress
     const categoryData = generateCategoryProgress(results);
     setCategoryProgress(categoryData);
   };
 
-  const generateWeeklyProgress = (results) => {
+  const generateWeeklyProgress = (results: ExamResult[]) => {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const weekData = [];
-    
+
+    const today = new Date();
     for (let i = 0; i < 7; i++) {
-      const dayResults = results.filter(result => {
-        const resultDate = new Date(result.date);
-        const targetDate = new Date();
-        targetDate.setDate(targetDate.getDate() - (6 - i));
-        return resultDate.toDateString() === targetDate.toDateString();
-      });
-      
-      const avgScore = dayResults.length > 0 
-        ? Math.round(dayResults.reduce((sum, r) => sum + r.score, 0) / dayResults.length)
-        : 0;
-      
+      const targetDate = new Date(today);
+      targetDate.setDate(today.getDate() - (6 - i)); // Go back 6 days for the first day, 0 for today
+      const dayResults = results.filter(
+        (result: ExamResult) => {
+          const resultDate = new Date(result.date);
+          return resultDate.toDateString() === targetDate.toDateString();
+        }
+      );
+
+      const avgScore =
+        dayResults.length > 0
+          ? Math.round(
+              dayResults.reduce((sum: number, r) => sum + r.score, 0) /
+                dayResults.length
+            )
+          : 0;
+
       weekData.push({
         day: days[i],
-        score: avgScore
+        score: avgScore,
       });
     }
-    
+
     return weekData;
   };
 
-  const generateCategoryProgress = (results) => {
+  const generateCategoryProgress = (
+    results: ExamResult[]
+  ) => {
     const categories = [
-      { name: 'Road Signs', key: 'road-signs', color: '#EF4444' },
-      { name: 'Traffic Rules', key: 'traffic-rules', color: '#2563EB' },
-      { name: 'First Aid', key: 'first-aid', color: '#DC2626' },
-      { name: 'Scenarios', key: 'scenarios', color: '#059669' },
+      { name: <Text>Road Signs</Text>, key: 'road-signs', color: '#EF4444' },
+      {
+        name: <Text>Traffic Rules</Text>,
+        key: 'traffic-rules',
+        color: '#2563EB',
+      },
+      { name: <Text>First Aid</Text>, key: 'first-aid', color: '#DC2626' },
+      { name: <Text>Scenarios</Text>, key: 'scenarios', color: '#059669' },
     ];
-    
-    return categories.map(category => {
-      const categoryResults = results.filter(r => r.category === category.key);
-      const avgProgress = categoryResults.length > 0
-        ? Math.round(categoryResults.reduce((sum, r) => sum + r.score, 0) / categoryResults.length)
-        : 0;
-      
+
+    return categories.map((category) => {
+      const categoryResults = results.filter(
+        (r: ExamResult) => r.category === category.key
+      );
+      const avgProgress =
+        categoryResults.length > 0
+          ? Math.round(
+              categoryResults.reduce((sum: number, r) => sum + r.score, 0) /
+                categoryResults.length
+            )
+          : 0;
+
       return {
         name: category.name,
         progress: avgProgress,
-        color: category.color
+        color: category.color,
       };
     });
   };
   const ProgressChart = () => {
-    const maxScore = Math.max(...weeklyProgress.map(d => d.score), 1);
+    const maxScore = Math.max(
+      ...weeklyProgress.map((d: { score: number }) => d.score),
+      1
+    );
     const chartHeight = 120;
 
     return (
@@ -98,15 +140,20 @@ export default function ProgressScreen() {
         <Text style={styles.chartTitle}>Weekly Performance</Text>
         <View style={styles.chart}>
           {weeklyProgress.map((day, index) => (
-            <View key={day.day} style={styles.chartBar}>
-              <View 
+            <View key={day.day as string} style={styles.chartBar}>
+              <View
                 style={[
                   styles.bar,
-                  { 
+                  {
                     height: (day.score / maxScore) * chartHeight,
-                    backgroundColor: day.score >= 80 ? '#059669' : day.score >= 60 ? '#F59E0B' : '#EF4444'
-                  }
-                ]} 
+                    backgroundColor:
+                      day.score >= 80
+                        ? '#059669'
+                        : day.score >= 60
+                        ? '#F59E0B'
+                        : '#EF4444',
+                  },
+                ]}
               />
               <Text style={styles.chartLabel}>{day.day}</Text>
               <Text style={styles.chartScore}>{day.score}%</Text>
@@ -124,14 +171,14 @@ export default function ProgressScreen() {
         <Text style={styles.categoryScore}>{category.progress}%</Text>
       </View>
       <View style={styles.progressBar}>
-        <View 
+        <View
           style={[
             styles.progressFill,
-            { 
+            {
               width: `${category.progress}%`,
-              backgroundColor: category.color
-            }
-          ]} 
+              backgroundColor: category.color,
+            },
+          ]}
         />
       </View>
     </View>
@@ -139,18 +186,21 @@ export default function ProgressScreen() {
 
   const StatCard = ({ icon, title, value, change, isPositive }: any) => (
     <View style={styles.statCard}>
-      <View style={styles.statIcon}>
-        {icon}
-      </View>
+      <View style={styles.statIcon}>{icon}</View>
       <View style={styles.statContent}>
         <Text style={styles.statValue}>{value}</Text>
         <Text style={styles.statTitle}>{title}</Text>
         {change && (
-          <Text style={[
-            styles.statChange,
-            { color: isPositive ? '#059669' : '#EF4444' }
-          ]}>
-            {isPositive ? '+' : ''}{change}%
+          <Text
+            style={[
+              styles.statChange,
+              { color: isPositive ? '#059669' : '#EF4444' },
+            ]}
+          >
+            <Text>
+              {isPositive ? '+' : ''}
+              {change}%
+            </Text>
           </Text>
         )}
       </View>
@@ -171,16 +221,36 @@ export default function ProgressScreen() {
             <StatCard
               icon={<Target size={24} color="#2563EB" />}
               title="Overall Score"
-              value={stats.totalQuestions > 0 ? `${Math.round((stats.totalCorrect / stats.totalQuestions) * 100)}%` : '0%'}
-              change={examResults.length >= 2 ? Math.round(examResults[0]?.score - examResults[1]?.score) : 0}
-              isPositive={true}
+              value={
+                stats.totalQuestions > 0
+                  ? `${Math.round(
+                      (stats.totalCorrect / stats.totalQuestions) * 100
+                    )}%`
+                  : '0%'
+              }
+              change={
+                examResults.length >= 2
+                  ? Math.round(examResults[0]?.score - examResults[1]?.score)
+                  : 0
+              }
+              isPositive={
+                examResults.length >= 2
+                  ? examResults[0]?.score - examResults[1]?.score >= 0
+                  : true
+              }
             />
             <StatCard
               icon={<TrendingUp size={24} color="#059669" />}
               title="Improvement"
-              value={examResults.length >= 2 ? `${examResults[0]?.score > examResults[1]?.score ? '+' : ''}${Math.round(examResults[0]?.score - examResults[1]?.score)}%` : '0%'}
-              change={0}
-              isPositive={true}
+              value={
+                examResults.length >= 2
+                  ? `${
+                      examResults[0]?.score > examResults[1]?.score ? '+' : ''
+                    }${Math.round(
+                      examResults[0]?.score - examResults[1]?.score
+                    )}%`
+                  : '0%'
+              }
             />
             <StatCard
               icon={<Calendar size={24} color="#F59E0B" />}
@@ -210,7 +280,7 @@ export default function ProgressScreen() {
           {/* Achievements */}
           <View style={styles.achievementsSection}>
             <Text style={styles.sectionTitle}>Recent Achievements</Text>
-            
+
             <View style={styles.achievementCard}>
               <View style={styles.achievementIcon}>
                 <Text style={styles.achievementEmoji}>🏆</Text>

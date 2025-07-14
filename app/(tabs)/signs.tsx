@@ -1,79 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, FlatList, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  Animated,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Search, Filter, TriangleAlert as AlertTriangle, Shield, Info } from 'lucide-react-native';
+import {
+  Search,
+  Filter,
+  TriangleAlert as AlertTriangle,
+  Shield,
+  Info,
+} from 'lucide-react-native';
 
 const signCategories = [
-  { id: 'all', title: 'All Signs', color: '#6B7280' },
-  { id: 'warning', title: 'Warning', color: '#F59E0B' },
-  { id: 'regulatory', title: 'Regulatory', color: '#DC2626' },
-  { id: 'informational', title: 'Informational', color: '#2563EB' },
+  { id: 'all', title: <Text>All Signs</Text>, color: '#6B7280' },
+  { id: 'warning', title: <Text>Warning</Text>, color: '#F59E0B' },
+  { id: 'regulatory', title: <Text>Regulatory</Text>, color: '#DC2626' },
+  { id: 'informational', title: <Text>Informational</Text>, color: '#2563EB' },
 ];
 
 const trafficSigns = [
   {
     id: 1,
-    name: 'Stop Sign',
+    name: <Text>Stop Sign</Text>,
     category: 'regulatory',
-    description: 'Come to a complete stop at the intersection',
+    description: <Text>Come to a complete stop at the intersection</Text>,
     emoji: '🛑',
-    details: 'Must stop completely before the stop line or crosswalk'
+    details: (
+      <Text>Must stop completely before the stop line or crosswalk</Text>
+    ),
   },
   {
     id: 2,
-    name: 'Yield Sign',
+    name: <Text>Yield Sign</Text>,
     category: 'regulatory',
-    description: 'Give right of way to other traffic',
+    description: <Text>Give right of way to other traffic</Text>,
     emoji: '🔺',
-    details: 'Slow down and give right of way to pedestrians and cross traffic'
+    details: (
+      <Text>
+        Slow down and give right of way to pedestrians and cross traffic
+      </Text>
+    ),
   },
   {
     id: 3,
-    name: 'Speed Limit',
+    name: <Text>Speed Limit</Text>,
     category: 'regulatory',
-    description: 'Maximum speed allowed',
+    description: <Text>Maximum speed allowed</Text>,
     emoji: '⚡',
-    details: 'Shows the maximum legal speed on this road'
+    details: <Text>Shows the maximum legal speed on this road</Text>,
   },
   {
     id: 4,
-    name: 'Pedestrian Crossing',
+    name: <Text>Pedestrian Crossing</Text>,
     category: 'warning',
-    description: 'Watch for pedestrians crossing',
+    description: <Text>Watch for pedestrians crossing</Text>,
     emoji: '🚶',
-    details: 'Reduce speed and watch for people crossing the road'
+    details: <Text>Reduce speed and watch for people crossing the road</Text>,
   },
   {
     id: 5,
-    name: 'School Zone',
+    name: <Text>School Zone</Text>,
     category: 'warning',
-    description: 'Reduced speed in school area',
+    description: <Text>Reduced speed in school area</Text>,
     emoji: '🏫',
-    details: 'Special speed limits during school hours'
+    details: <Text>Special speed limits during school hours</Text>,
   },
   {
     id: 6,
-    name: 'Hospital',
+    name: <Text>Hospital</Text>,
     category: 'informational',
-    description: 'Hospital or medical facility',
+    description: <Text>Hospital or medical facility</Text>,
     emoji: '🏥',
-    details: 'Indicates location of hospital or medical services'
+    details: <Text>Indicates location of hospital or medical services</Text>,
   },
   {
     id: 7,
-    name: 'Parking',
+    name: <Text>Parking</Text>,
     category: 'informational',
-    description: 'Parking area available',
+    description: <Text>Parking area available</Text>,
     emoji: '🅿️',
-    details: 'Designated parking area ahead'
+    details: <Text>Designated parking area ahead</Text>,
   },
   {
     id: 8,
-    name: 'No Entry',
+    name: <Text>No Entry</Text>,
     category: 'regulatory',
-    description: 'Do not enter this area',
+    description: <Text>Do not enter this area</Text>,
     emoji: '⛔',
-    details: 'Entry prohibited for all vehicles'
+    details: <Text>Entry prohibited for all vehicles</Text>,
   },
 ];
 
@@ -99,13 +120,26 @@ export default function SignsScreen() {
     let filtered = trafficSigns;
 
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(sign => sign.category === selectedCategory);
+      filtered = filtered.filter((sign) => sign.category === selectedCategory);
     }
 
     if (searchText) {
-      filtered = filtered.filter(sign =>
-        sign.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        sign.description.toLowerCase().includes(searchText.toLowerCase())
+      filtered = filtered.filter(
+        (sign) =>
+          (
+            typeof sign.name === 'string'
+              ? sign.name
+              : typeof sign.name.props.children === 'string'
+              ? sign.name.props.children
+              : ''
+          ).toLowerCase().includes(searchText.toLowerCase()) ||
+          (
+            typeof sign.description === 'string'
+              ? sign.description
+              : typeof sign.description.props.children === 'string'
+              ? sign.description.props.children
+              : ''
+          ).toLowerCase().includes(searchText.toLowerCase())
       );
     }
 
@@ -116,14 +150,16 @@ export default function SignsScreen() {
     <TouchableOpacity
       style={[
         styles.categoryButton,
-        selectedCategory === category.id && { backgroundColor: category.color }
+        selectedCategory === category.id && { backgroundColor: category.color },
       ]}
       onPress={() => setSelectedCategory(category.id)}
     >
-      <Text style={[
-        styles.categoryButtonText,
-        selectedCategory === category.id && { color: 'white' }
-      ]}>
+      <Text
+        style={[
+          styles.categoryButtonText,
+          selectedCategory === category.id && { color: 'white' },
+        ]}
+      >
         {category.title}
       </Text>
     </TouchableOpacity>
@@ -161,18 +197,20 @@ export default function SignsScreen() {
         <View style={styles.signEmoji}>
           <Text style={styles.emojiText}>{item.emoji}</Text>
         </View>
-        
+
         <View style={styles.signContent}>
           <View style={styles.signHeader}>
             <Text style={styles.signName}>{item.name}</Text>
-            <View style={[
-              styles.categoryBadge,
-              { backgroundColor: getCategoryColor(item.category) }
-            ]}>
+            <View
+              style={[
+                styles.categoryBadge,
+                { backgroundColor: getCategoryColor(item.category) },
+              ]}
+            >
               {getCategoryIcon(item.category)}
             </View>
           </View>
-          
+
           <Text style={styles.signDescription}>{item.description}</Text>
           <Text style={styles.signDetails}>{item.details}</Text>
         </View>
@@ -200,8 +238,8 @@ export default function SignsScreen() {
         </View>
 
         {/* Category Filters */}
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.categoriesScroll}
         >

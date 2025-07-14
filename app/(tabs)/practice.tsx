@@ -7,8 +7,8 @@ import { router } from 'expo-router';
 const categories = [
   {
     id: 'road-signs',
-    title: 'Road Signs',
-    subtitle: 'Traffic signs and signals',
+    title: <Text>Road Signs</Text>,
+    subtitle: <Text>Traffic signs and signals</Text>,
     icon: <AlertTriangle size={32} color="white" />,
     color: '#EF4444',
     questionCount: 25,
@@ -16,8 +16,8 @@ const categories = [
   },
   {
     id: 'traffic-rules',
-    title: 'Traffic Rules',
-    subtitle: 'Laws and regulations',
+    title: <Text>Traffic Rules</Text>,
+    subtitle: <Text>Laws and regulations</Text>,
     icon: <Car size={32} color="white" />,
     color: '#2563EB',
     questionCount: 30,
@@ -25,8 +25,8 @@ const categories = [
   },
   {
     id: 'first-aid',
-    title: 'First Aid',
-    subtitle: 'Emergency procedures',
+    title: <Text>First Aid</Text>,
+    subtitle: <Text>Emergency procedures</Text>,
     icon: <Heart size={32} color="white" />,
     color: '#DC2626',
     questionCount: 15,
@@ -34,8 +34,8 @@ const categories = [
   },
   {
     id: 'scenarios',
-    title: 'Scenarios',
-    subtitle: 'Real driving situations',
+    title: <Text>Scenarios</Text>,
+    subtitle: <Text>Real driving situations</Text>,
     icon: <BookOpen size={32} color="white" />,
     color: '#059669',
     questionCount: 20,

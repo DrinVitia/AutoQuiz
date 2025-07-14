@@ -127,7 +127,7 @@ export default function QuizScreen() {
             </View>
             
             <Text style={styles.resultTitle}>
-              {score >= 70 ? 'Great Job!' : 'Keep Practicing!'}
+              <Text>{score >= 70 ? 'Great Job!' : 'Keep Practicing!'}</Text>
             </Text>
             
             <Text style={styles.resultSubtitle}>
@@ -201,7 +201,7 @@ export default function QuizScreen() {
               )}
             </View>
             <Text style={[styles.feedbackText, isCorrect ? styles.correctText : styles.incorrectText]}>
-              {isCorrect ? 'Correct!' : 'Incorrect'}
+              <Text>{isCorrect ? 'Correct!' : 'Incorrect'}</Text>
             </Text>
           </View>
         )}
@@ -217,7 +217,7 @@ export default function QuizScreen() {
             disabled={selectedAnswers[currentQuestionIndex] === -1}
           >
             <Text style={styles.nextButtonText}>
-              {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+              <Text>{currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}</Text>
             </Text>
           </TouchableOpacity>
         )}

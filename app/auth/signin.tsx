@@ -79,7 +79,7 @@ export default function SignInScreen() {
               disabled={loading}
             >
               <Text style={styles.signInButtonText}>
-                {loading ? 'Signing In...' : 'Sign In'}
+                <Text>{loading ? 'Signing In...' : 'Sign In'}</Text>
               </Text>
             </TouchableOpacity>
           </View>

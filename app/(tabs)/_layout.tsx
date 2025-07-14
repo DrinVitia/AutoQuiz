@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router';
+import { Text } from 'react-native';
 import { Chrome as Home, BookOpen, Clock, Signpost as SignPost, TrendingUp } from 'lucide-react-native';
 
 export default function TabLayout() {
@@ -15,16 +16,12 @@ export default function TabLayout() {
           paddingBottom: 8,
           height: 80,
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600',
-          marginTop: 4,
-        },
+
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 12, fontWeight: '600' }}>Home</Text>,
           tabBarIcon: ({ size, color }) => (
             <Home size={size} color={color} />
           ),
@@ -33,7 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="practice"
         options={{
-          title: 'Practice',
+          tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 12, fontWeight: '600' }}>Practice</Text>,
           tabBarIcon: ({ size, color }) => (
             <BookOpen size={size} color={color} />
           ),
@@ -42,7 +39,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="exam"
         options={{
-          title: 'Exam',
+          tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 12, fontWeight: '600' }}>Exam</Text>,
           tabBarIcon: ({ size, color }) => (
             <Clock size={size} color={color} />
           ),
@@ -51,7 +48,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="signs"
         options={{
-          title: 'Signs',
+          tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 12, fontWeight: '600' }}>Signs</Text>,
           tabBarIcon: ({ size, color }) => (
             <SignPost size={size} color={color} />
           ),
@@ -60,7 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="progress"
         options={{
-          title: 'Progress',
+          tabBarLabel: ({ color }) => <Text style={{ color, fontSize: 12, fontWeight: '600' }}>Progress</Text>,
           tabBarIcon: ({ size, color }) => (
             <TrendingUp size={size} color={color} />
           ),
