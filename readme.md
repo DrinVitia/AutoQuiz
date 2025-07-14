@@ -34,40 +34,6 @@ A mobile application built with **React Native** and **Expo**, styled using **na
 - **JWT Authentication** (optional)
 
 ---
-
-## 📁 Project Structure
-
-````
-
-
-
-## 🧾 Prisma Schema (Backend)
-
-```prisma
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  history   ExamResult[]
-}
-
-model Question {
-  id          String   @id @default(cuid())
-  question    String
-  options     String[]
-  correct     String
-  category    String
-  explanation String?
-}
-
-model ExamResult {
-  id        String   @id @default(cuid())
-  userId    String
-  score     Int
-  dateTaken DateTime @default(now())
-}
-````
-
 ---
 
 ## 🛠 Installation & Setup
@@ -130,7 +96,8 @@ npm run dev
 
 ## 📸 Screenshots
 
-_Add screenshots of the app interface here._
+<img width="394" height="782" alt="image" src="https://github.com/user-attachments/assets/d565a473-4222-43d7-bd76-9e882cbcf19d" />
+
 
 ---
 
