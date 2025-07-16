@@ -1,4 +1,4 @@
-# 🚗📱 Driving Exam Prep App
+# 🚗📱 AutoQuiz - Driving Exam Prep App 
 
 A mobile application built with **React Native** and **Expo**, styled using **native CSS (StyleSheet API)**, and powered by a **Prisma + Node.js** backend. The app helps users prepare for their driving theory exam through interactive quizzes, traffic sign training, and progress tracking.
 
@@ -22,7 +22,7 @@ A mobile application built with **React Native** and **Expo**, styled using **na
 
 - **React Native** (via **Expo**)
 - **JavaScript/TypeScript**
-- **StyleSheet API** for styling (no Tailwind)
+- **StyleSheet API** for styling
 - **React Navigation**
 - **AsyncStorage** for local storage
 
@@ -96,7 +96,10 @@ npm run dev
 
 ## 📸 Screenshots
 
-<img width="394" height="782" alt="image" src="https://github.com/user-attachments/assets/d565a473-4222-43d7-bd76-9e882cbcf19d" />
+<img width="394" height="782" alt="image" src="https://github.com/user-attachments/assets/87449398-d923-4382-82ab-b07ea6a913f5" />
+<img width="394" height="782" alt="image" src="https://github.com/user-attachments/assets/37a754fe-e5e3-46fd-a7e7-5cb8872c6434" />
+<img width="394" height="782" alt="image" src="https://github.com/user-attachments/assets/04468f68-f9d7-455b-9473-fff586f19b07" />
+<img width="394" height="782" alt="image" src="https://github.com/user-attachments/assets/c3c218c2-26c2-4f06-b716-47c209c6f236" />
 
 
 ---
